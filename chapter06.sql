@@ -173,7 +173,7 @@ CREATE TABLE us_counties_2000 (
 );
 
 COPY us_counties_2000
-FROM 'C:\YourDirectory\us_counties_2000.csv'
+FROM '/Users/shadowsgeneraldealer/YourDirectory/us_counties_2000.csv'
 WITH (FORMAT CSV, HEADER);
 
 SELECT c2010.geo_name,
@@ -186,5 +186,18 @@ SELECT c2010.geo_name,
 FROM us_counties_2010 c2010 INNER JOIN us_counties_2000 c2000
 ON c2010.state_fips = c2000.state_fips
    AND c2010.county_fips = c2000.county_fips
-   AND c2010.p0010001 <> c2000.p0010001
-ORDER BY pct_change DESC;
+   AND c2010.p0010001 <> c2000.p0010001 --only include parts where there are changes/differences
+ORDER BY pct_change ASC;
+
+--try it yourself
+--1.
+SELECT c2010.geo_name,
+       c2010.state_us_abbreviation,
+       c2000.geo_name
+FROM us_counties_2010 c2010 LEFT JOIN us_counties_2000 c2000
+ON c2010.state_fips = c2000.state_fips
+   AND c2010.county_fips = c2000.county_fips
+WHERE c2000.geo_name IS NULL;
+--2.
+
+--3.St. Bernard Parish due to hurricane Katrina.
