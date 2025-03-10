@@ -203,3 +203,16 @@ COPY (
      )
 TO '/Users/shadowsgeneraldealer/YourDirectory/us_counties_mill_export.txt'
 WITH (FORMAT CSV, HEADER, DELIMITER '|');
+
+--DO IT YOURSELF
+--1. WITH (FORMAT CSV, HEADER, DELIMITER ':', QUOTE '#');
+--2.
+COPY (
+    SELECT geo_name, state_us_abbreviation, housing_unit_count_100_percent
+    FROM us_counties_2010
+    ORDER BY housing_unit_count_100_percent DESC
+	LIMIT 20
+     )
+TO '/Users/shadowsgeneraldealer/YourDirectory/us_counties_housing_unit.txt'
+WITH (FORMAT CSV, HEADER, DELIMITER '|');
+--3.NO, BECAUSE THESE NUMBERS HAVE A PRECISION OF 8 AND SCALE OF 3. NUMERIC(8,3) WILL WORK
