@@ -101,10 +101,10 @@ CREATE TABLE check_constraint_example (
     user_role varchar(50),
     salary integer,
     CONSTRAINT user_id_key PRIMARY KEY (user_id),
-    CONSTRAINT check_role_in_list CHECK (user_role IN('Admin', 'Staff')),
+    CONSTRAINT check_role_in_list CHECK (user_role IN('Admin', 'Staff')), --COLUMN VALUES MATCH THE ONES SPECIFIED
     CONSTRAINT check_salary_not_zero CHECK (salary > 0)
 );
-
+DROP TABLE check_constraint_example;
 -- Both of these will fail:
 INSERT INTO check_constraint_example (user_role)
 VALUES ('admin');
@@ -154,6 +154,7 @@ ALTER TABLE not_null_example ALTER COLUMN first_name DROP NOT NULL;
 -- Add
 ALTER TABLE not_null_example ALTER COLUMN first_name SET NOT NULL;
 
+
 -- Listing 7-11: Importing New York City address data
 
 CREATE TABLE new_york_addresses (
@@ -167,7 +168,7 @@ CREATE TABLE new_york_addresses (
 );
 
 COPY new_york_addresses
-FROM 'C:\YourDirectory\city_of_new_york.csv'
+FROM '/Users/shadowsgeneraldealer/YourDirectory/city_of_new_york.csv'
 WITH (FORMAT CSV, HEADER);
 
 -- Listing 7-12: Benchmark queries for index performance
@@ -184,3 +185,27 @@ WHERE street = 'ZWICKY AVENUE';
 -- Listing 7-13: Creating a B-Tree index on the new_york_addresses table
 
 CREATE INDEX street_idx ON new_york_addresses (street);
+
+--try it yourself: chapter 7
+
+--question 7.1
+CREATE TABLE albums (
+album_id bigserial
+album_catalog_code varchar(100),
+album_title text NOT NULL,
+album_artist text NOT NULL,
+album_release_date date,
+album_genre varchar(40),
+album_description text,
+CONSTRAINT albums_primary_key PRIMARY KEY (album_id),
+CONSTRAINT unique_catalog_code UNIQUE (album_catalog_code),
+CONSTRAINT check_album_not_too_old CHECK (album_release_date > '1960-01-01')
+);
+
+CREATE TABLE songs (
+song_id bigserial,
+song_title text NOT NULL,
+song_artist text NOT NULL,
+album_id bigint REFERENCES albums (album_id) ON DELETE CASCADE,
+CONSTRAINT songs_primary_key PRIMARY KEY (song_id)
+);
